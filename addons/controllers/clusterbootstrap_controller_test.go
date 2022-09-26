@@ -329,6 +329,23 @@ var _ = Describe("ClusterBootstrap Reconciler", func() {
 					}, waitTimeout, pollingInterval).Should(BeTrue())
 				})
 
+				remoteClient, err := util.GetClusterClient(ctx, k8sClient, scheme, clusterapiutil.ObjectKey(cluster))
+				Expect(err).NotTo(HaveOccurred())
+				Expect(remoteClient).NotTo(BeNil())
+
+				// Since Foobar provider does not have a controller to create the data values secret and update to the status, the foobar packageInstall
+				// should not be created so far.
+				By("verifying foobar packageInstall is not created since the foobar provider status does not have a secret ref", func() {
+					foobarPkgi := &kapppkgiv1alpha1.PackageInstall{}
+					err := remoteClient.Get(ctx,
+						client.ObjectKey{
+							Namespace: constants.TKGSystemNS,
+							Name:      util.GeneratePackageInstallName(clusterName, foobarCarvelPackageRefName),
+						}, foobarPkgi)
+					Expect(err).Should(HaveOccurred())
+					Expect(strings.Contains(err.Error(), "not found")).To(BeTrue())
+				})
+
 				// Simulate a controller adding secretRef to provider status and
 				// verify that a data-values secret has been created for the Foobar package
 				By("patching foobar provider object's status resource with a secret ref", func() {
@@ -391,10 +408,6 @@ var _ = Describe("ClusterBootstrap Reconciler", func() {
 				Expect(kappControllerPkgi.Annotations).ShouldNot(BeNil())
 				Expect(kappControllerPkgi.Annotations[addontypes.ClusterNamespaceAnnotation]).Should(Equal(clusterNamespace))
 				Expect(kappControllerPkgi.Annotations[addontypes.ClusterNameAnnotation]).Should(Equal(clusterName))
-
-				remoteClient, err := util.GetClusterClient(ctx, k8sClient, scheme, clusterapiutil.ObjectKey(cluster))
-				Expect(err).NotTo(HaveOccurred())
-				Expect(remoteClient).NotTo(BeNil())
 
 				By("verifying that ServiceAccount, ClusterRole and ClusterRoleBinding are created on the workload cluster properly")
 				sa := &corev1.ServiceAccount{}
