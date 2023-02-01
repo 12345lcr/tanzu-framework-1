@@ -46,7 +46,7 @@ require (
 	github.com/vmware-tanzu/tanzu-framework/cli/core v0.0.0-20220914003300-5b2ed024556a
 	github.com/vmware-tanzu/tanzu-framework/cli/runtime v0.0.0-00010101000000-000000000000
 	github.com/vmware-tanzu/tanzu-framework/tkg v0.0.0-00010101000000-000000000000
-	github.com/vmware/govmomi v0.27.1
+	github.com/vmware/govmomi v0.30.2
 	golang.org/x/oauth2 v0.0.0-20220309155454-6242fa91716a
 	gomodules.xyz/jsonpatch/v2 v2.2.0
 	google.golang.org/grpc v1.44.0
@@ -201,6 +201,7 @@ require (
 	github.com/prometheus/common v0.32.1 // indirect
 	github.com/prometheus/procfs v0.7.3 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
+	github.com/rogpeppe/go-internal v1.9.0 // indirect
 	github.com/rs/xid v1.4.0 // indirect
 	github.com/russross/blackfriday v1.6.0 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
